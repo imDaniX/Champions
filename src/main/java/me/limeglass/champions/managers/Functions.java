@@ -1,14 +1,13 @@
 package me.limeglass.champions.managers;
 
 import org.bukkit.Bukkit;
-import org.eclipse.jdt.annotation.Nullable;
 
 import me.limeglass.champions.Champions;
 import me.limeglass.champions.objects.ChampionsPlayer;
 
 public class Functions {
 	
-	public static void executeFunction(@Nullable ChampionsPlayer player, String function) {
+	public static void executeFunction(ChampionsPlayer player, String function) {
 		if (function.contains("ConsoleCommand")) {
 			consoleCommand(function);
 		} else if (function.contains("PlayerCommand") && player != null) {
