@@ -1,19 +1,18 @@
 package me.limeglass.champions.scoreboard;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import me.limeglass.champions.objects.ChampionsPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
-import me.limeglass.champions.objects.ChampionsPlayer;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ChampionsScoreboard {
 
-	private static Map<Integer, ScoreboardEntry> scores = new HashMap<Integer, ScoreboardEntry>();
+	private static final Map<Integer, ScoreboardEntry> scores = new HashMap<>();
 	private final ChampionsPlayer player;
 	private Scoreboard scoreboard;
 	private String title;
@@ -35,11 +34,11 @@ public class ChampionsScoreboard {
 			name = value;
 		} else if (value.length() <= 32) {
 			name = value.substring(0, 16);
-			suffix = value.substring(16, value.length());
+			suffix = value.substring(16);
 		} else {
 			prefix = value.substring(0, 16);
 			name = value.substring(16, 32);
-			suffix = value.substring(32, value.length());
+			suffix = value.substring(32);
 		}
 		if (scores.containsKey(slot)) scores.get(slot).delete();
 		Team team = scoreboard.getEntryTeam(name);

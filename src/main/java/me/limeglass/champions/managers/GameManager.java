@@ -1,5 +1,12 @@
 package me.limeglass.champions.managers;
 
+import me.limeglass.champions.Champions;
+import me.limeglass.champions.objects.ChampionsGame;
+import me.limeglass.champions.objects.ChampionsGame.ChampionsMode;
+import me.limeglass.champions.utils.Utils;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -8,28 +15,18 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-
-import me.limeglass.champions.Champions;
-import me.limeglass.champions.objects.ChampionsGame;
-import me.limeglass.champions.objects.ChampionsGame.ChampionsMode;
-import me.limeglass.champions.utils.Utils;
-
 public class GameManager {
 
-	public static Map<Player, ChampionsGame> tempgames = new HashMap<>();
-	private static Set<ChampionsGame> games = new HashSet<>();
+	public static final Map<Player, ChampionsGame> tempgames = new HashMap<>();
+	private static final Set<ChampionsGame> games = new HashSet<>();
 	
 	public static void addGame(ChampionsGame game) {
-		if (!games.contains(game))
-			games.add(game);
+		games.add(game);
 	}
 	
 	public static void removeGame(ChampionsGame game) {
 		game.end();
-		if (games.contains(game))
-			games.remove(game);
+		games.remove(game);
 	}
 	
 	public static Boolean containsGame(String name) {
@@ -48,7 +45,7 @@ public class GameManager {
 	
 	public static Set<ChampionsGame> getRunningGames() {
 		return games.parallelStream()
-				.filter(game -> game.isIngame())
+				.filter(ChampionsGame::isIngame)
 				.collect(Collectors.toSet());
 	}
 	
@@ -59,7 +56,7 @@ public class GameManager {
 	}
 	
 	public static void endGames() {
-		games.forEach(game -> game.end());
+		games.forEach(ChampionsGame::end);
 		games.clear();
 	}
 	

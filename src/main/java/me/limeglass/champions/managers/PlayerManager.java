@@ -1,33 +1,30 @@
 package me.limeglass.champions.managers;
 
+import me.limeglass.champions.objects.ChampionsPlayer;
+import org.bukkit.entity.Player;
+
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.bukkit.entity.Player;
-
-import me.limeglass.champions.objects.ChampionsPlayer;
-
 public class PlayerManager {
 
-	private static Set<ChampionsPlayer> players = new HashSet<>();
+	private static final Set<ChampionsPlayer> players = new HashSet<>();
 	
 	public static void addPlayer(ChampionsPlayer player) {
-		if (!players.contains(player))
-			players.add(player);
+		players.add(player);
 	}
 	
 	public static void removePlayer(ChampionsPlayer player) {
 		player.setConnected(false);
 		player.setIngame(false);
-		if (players.contains(player))
-			players.remove(player);
+		players.remove(player);
 	}
 	
 	public static Boolean containsPlayer(Player player) {
 		return players.parallelStream()
-				.map(p -> p.getPlayer())
+				.map(ChampionsPlayer::getPlayer)
 				.anyMatch(p -> p.getUniqueId() == player.getUniqueId());
 	}
 	
@@ -37,7 +34,7 @@ public class PlayerManager {
 	
 	public static Set<ChampionsPlayer> getPlayersIngame() {
 		return players.parallelStream()
-				.filter(player -> player.isIngame())
+				.filter(ChampionsPlayer::isIngame)
 				.collect(Collectors.toSet());
 	}
 	

@@ -6,10 +6,10 @@ import org.bukkit.scoreboard.Team;
 
 public class ScoreboardEntry {
 
-	private Scoreboard scoreboard;
-	private Integer slot;
-	private Score score;
-	private Team team;
+	private final Scoreboard scoreboard;
+	private final Integer slot;
+	private final Score score;
+	private final Team team;
 	
 	public ScoreboardEntry(Scoreboard scoreboard, Integer slot, Score score, Team team) {
 		this.scoreboard = scoreboard;

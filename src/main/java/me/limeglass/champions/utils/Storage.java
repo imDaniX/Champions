@@ -1,5 +1,12 @@
 package me.limeglass.champions.utils;
 
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import me.limeglass.champions.Champions;
+import org.bukkit.Bukkit;
+import org.bukkit.scheduler.BukkitTask;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -9,14 +16,6 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.TreeMap;
-import org.bukkit.Bukkit;
-import org.bukkit.scheduler.BukkitTask;
-
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import me.limeglass.champions.Champions;
 
 public class Storage {
 	
@@ -24,9 +23,9 @@ public class Storage {
 	private static final String NEW_LINE = "\n";
 	private static final String DELIMITER = ": ";
 	private static FileWriter writer = null;
-	private static GsonBuilder gsonBuilder = new GsonBuilder();
+	private static final GsonBuilder gsonBuilder = new GsonBuilder();
 	private static Gson gson;
-	public static TreeMap<String, Object> data = new TreeMap<String, Object>(String.CASE_INSENSITIVE_ORDER);
+	public static final TreeMap<String, Object> data = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 	private static Boolean loadingHash = false;
 	private static BukkitTask task;
 
@@ -102,7 +101,7 @@ public class Storage {
 		String line = "";
 		BufferedReader reader = null;
 		try {
-			ArrayList<String[]> data = new ArrayList<String[]>();
+			ArrayList<String[]> data = new ArrayList<>();
 			reader = new BufferedReader(new FileReader(file));
 			for (int i = 0; i < 4; i ++) {
 				reader.readLine();
@@ -207,12 +206,9 @@ public class Storage {
 	}
 	
 	public static void run() {
-		task = Bukkit.getScheduler().runTaskTimerAsynchronously(Champions.getInstance(), new Runnable() {
-			@Override
-			public void run() {
-				Champions.consoleMessage("Data has been saved!");
-				save(true, true);
-			}
+		task = Bukkit.getScheduler().runTaskTimerAsynchronously(Champions.getInstance(), () -> {
+			Champions.consoleMessage("Data has been saved!");
+			save(true, true);
 		}, 1, (20 * 60) * Champions.getConfiguration("config").getInt("Data.backup-timer", 60)); //60 minutes by default
 	}
 }

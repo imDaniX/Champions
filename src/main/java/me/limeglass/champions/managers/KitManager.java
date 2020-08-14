@@ -1,23 +1,21 @@
 package me.limeglass.champions.managers;
 
+import me.limeglass.champions.objects.Kit;
+
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import me.limeglass.champions.objects.Kit;
-
 public class KitManager {
 
-	private static Set<Kit> kits = new HashSet<>();
+	private static final Set<Kit> kits = new HashSet<>();
 	
 	public static void addKit(Kit kit) {
-		if (!kits.contains(kit))
-			kits.add(kit);
+		kits.add(kit);
 	}
 	
 	public static void removeKit(Kit kit) {
-		if (kits.contains(kit))
-			kits.remove(kit);
+		kits.remove(kit);
 	}
 	
 	public static Set<Kit> getRegisteredKits() {

@@ -1,7 +1,11 @@
 package me.limeglass.champions.listeners;
 
-import java.util.Optional;
-
+import me.limeglass.champions.Champions;
+import me.limeglass.champions.managers.Functions;
+import me.limeglass.champions.managers.InventoryManager;
+import me.limeglass.champions.managers.PlayerManager;
+import me.limeglass.champions.objects.ChampionsPlayer;
+import me.limeglass.champions.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -19,12 +23,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
-import me.limeglass.champions.Champions;
-import me.limeglass.champions.managers.Functions;
-import me.limeglass.champions.managers.InventoryManager;
-import me.limeglass.champions.managers.PlayerManager;
-import me.limeglass.champions.objects.ChampionsPlayer;
-import me.limeglass.champions.utils.Utils;
+import java.util.Optional;
 
 public class EventListener implements Listener {
 	
@@ -92,14 +91,11 @@ public class EventListener implements Listener {
 			final Player player = event.getPlayer();
 			//This task is delayed because on some Minecraft versions there is a glitch that when clearing an inventory on join
 			//it makes the player deal less damage for some reason.
-			Bukkit.getScheduler().scheduleSyncDelayedTask(Champions.getInstance(), new Runnable() {
-				@Override
-				public void run() {
-					Optional<ChampionsPlayer> optional = PlayerManager.getChampionsPlayer(player);
-					if (!optional.isPresent())
-						return;
-					optional.get().join();
-				}
+			Bukkit.getScheduler().scheduleSyncDelayedTask(Champions.getInstance(), () -> {
+				Optional<ChampionsPlayer> optional = PlayerManager.getChampionsPlayer(player);
+				if (!optional.isPresent())
+					return;
+				optional.get().join();
 			}, 1);
 		}
     }
@@ -113,7 +109,7 @@ public class EventListener implements Listener {
 				return;
 			ChampionsPlayer player = optional.get();
 			PlayerManager.removePlayer(player);
-		} catch (Exception stupidSpigot) {}
+		} catch (Exception ignored) {}
     }
 	
 	@EventHandler

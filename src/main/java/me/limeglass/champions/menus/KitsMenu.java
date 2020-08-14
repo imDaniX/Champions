@@ -1,22 +1,21 @@
 package me.limeglass.champions.menus;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.regex.Pattern;
-
+import me.limeglass.champions.Champions;
+import me.limeglass.champions.abstracts.Menu;
+import me.limeglass.champions.managers.KitManager;
+import me.limeglass.champions.managers.PlayerManager;
+import me.limeglass.champions.objects.ChampionsPlayer;
+import me.limeglass.champions.objects.Kit;
+import me.limeglass.champions.utils.Utils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-import me.limeglass.champions.Champions;
-import me.limeglass.champions.abstracts.Menu;
-import me.limeglass.champions.managers.KitManager;
-import me.limeglass.champions.managers.PlayerManager;
-import me.limeglass.champions.objects.Kit;
-import me.limeglass.champions.objects.ChampionsPlayer;
-import me.limeglass.champions.utils.Utils;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.regex.Pattern;
 
 public class KitsMenu extends Menu {
 	
@@ -35,7 +34,7 @@ public class KitsMenu extends Menu {
 
 	@Override
 	protected Map<Integer, ItemStack> getItems() {
-		Map<Integer, ItemStack> items = new HashMap<Integer, ItemStack>();
+		Map<Integer, ItemStack> items = new HashMap<>();
 		int i = 0;
 		for (String kit : kits.getConfigurationSection("Kits").getKeys(false)) {
 			items.put(section[i], Utils.getItem(kits, "Kits." + kit + ".inventory"));
@@ -68,15 +67,15 @@ public class KitsMenu extends Menu {
 				return;
 			ChampionsPlayer player = optional.get();
 			Kit kit = getKit(event.getCurrentItem(), event.getSlot());
-			sendPlaceholderMessage(player, "kitSelect", kit);
+			sendPlaceholderMessage(player, kit);
 			player.applyKit(kit);
 		}
 	}
 	
-	private void sendPlaceholderMessage(ChampionsPlayer player, String node, Kit kit) {
+	private void sendPlaceholderMessage(ChampionsPlayer player, Kit kit) {
 		if (kit == null)
 			return;
-		String message = Champions.getConfiguration("messages").getString("prefix") + Champions.getConfiguration("messages").getString(node);
+		String message = Champions.getConfiguration("messages").getString("prefix") + Champions.getConfiguration("messages").getString("kitSelect");
 		message = message.replaceAll(Pattern.quote("{KIT}"), kit.getName());
 		player.sendMessage(Utils.colour(message));
 	}

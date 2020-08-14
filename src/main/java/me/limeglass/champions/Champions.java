@@ -1,5 +1,16 @@
 package me.limeglass.champions;
 
+import me.limeglass.champions.commands.CommandHandler;
+import me.limeglass.champions.listeners.EventListener;
+import me.limeglass.champions.managers.GameManager;
+import me.limeglass.champions.objects.ChampionsGame;
+import me.limeglass.champions.utils.Utils;
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.java.JavaPlugin;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -9,17 +20,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.java.JavaPlugin;
-
-import me.limeglass.champions.commands.CommandHandler;
-import me.limeglass.champions.listeners.EventListener;
-import me.limeglass.champions.managers.GameManager;
-import me.limeglass.champions.utils.Utils;
-
 /*
  * Main class for the Champions plugin.
  * Developed by LimeGlass
@@ -27,8 +27,8 @@ import me.limeglass.champions.utils.Utils;
 
 public class Champions extends JavaPlugin {
 	
-	private static Map<String, FileConfiguration> files = new HashMap<>();
-	private static Set<ChampionsAddon> addons = new HashSet<>();
+	private static final Map<String, FileConfiguration> files = new HashMap<>();
+	private static final Set<ChampionsAddon> addons = new HashSet<>();
 	private final static String nameplate = "[Champions] ";
 	private static ChampionsAddon registrar;
 	private static File championsDataFolder;
@@ -68,7 +68,7 @@ public class Champions extends JavaPlugin {
 	}
 	
 	public void onDisable() {
-		GameManager.tempgames.values().forEach(game -> game.delete());
+		GameManager.tempgames.values().forEach(ChampionsGame::delete);
 	}
 	
 	public static void save(String configuration) {
@@ -92,7 +92,7 @@ public class Champions extends JavaPlugin {
 	//Used internally, there is no need to use this method.
 	public static Optional<ChampionsAddon> getCurrentRegistrar() {
 		return addons.parallelStream()
-				.filter(addon -> addon.isCurrentlyLoading())
+				.filter(ChampionsAddon::isCurrentlyLoading)
 				.findFirst();
 	}
 	
@@ -114,7 +114,7 @@ public class Champions extends JavaPlugin {
 	 * @return The FileConfiguration of the named file if found.
 	 */
 	public static FileConfiguration getConfiguration(String file) {
-		return (files.containsKey(file)) ? files.get(file) : null;
+		return files.getOrDefault(file, null);
 	}
 	
 	public static void debugMessage(String text) {

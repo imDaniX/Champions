@@ -1,5 +1,11 @@
 package me.limeglass.champions;
 
+import me.limeglass.champions.abstracts.Ability;
+import me.limeglass.champions.abstracts.Menu;
+import me.limeglass.champions.listeners.EventHandler;
+import org.bukkit.event.Event;
+import org.bukkit.plugin.java.JavaPlugin;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -10,21 +16,14 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import org.bukkit.event.Event;
-import org.bukkit.plugin.java.JavaPlugin;
-
-import me.limeglass.champions.abstracts.Ability;
-import me.limeglass.champions.abstracts.Menu;
-import me.limeglass.champions.listeners.EventHandler;
-
 public class ChampionsAddon {
 	
-	private Set<Ability> abilities = new HashSet<>();
-	private Set<Class<?>> classes = new HashSet<>();
-	private Set<Menu> menus = new HashSet<Menu>();
-	private JavaPlugin plugin;
+	private final Set<Ability> abilities = new HashSet<>();
+	private final Set<Class<?>> classes = new HashSet<>();
+	private final Set<Menu> menus = new HashSet<>();
+	private final JavaPlugin plugin;
 	private boolean current;
-	private JarFile jar;
+	private final JarFile jar;
 	
 	public ChampionsAddon(JavaPlugin plugin) {
 		this.plugin = plugin;

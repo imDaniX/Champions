@@ -1,18 +1,17 @@
 package me.limeglass.champions.managers;
 
+import me.limeglass.champions.abstracts.Menu;
+import me.limeglass.champions.utils.Utils;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.inventory.Inventory;
-
-import me.limeglass.champions.abstracts.Menu;
-import me.limeglass.champions.utils.Utils;
-import org.bukkit.inventory.InventoryView;
-
 public class InventoryManager {
 
-	private static Map<String, Menu> menus = new HashMap<>();
+	private static final Map<String, Menu> menus = new HashMap<>();
 	
 	public static void addMenu(Menu menu) {
 		if (!menus.containsKey(menu.getName()))
@@ -20,8 +19,7 @@ public class InventoryManager {
 	}
 	
 	public static void removeMenu(String name) {
-		if (menus.containsKey(name))
-			menus.remove(name);
+		menus.remove(name);
 	}
 	
 	public static Map<String, Menu> getMenus() {

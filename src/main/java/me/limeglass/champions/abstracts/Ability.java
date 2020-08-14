@@ -1,26 +1,25 @@
 package me.limeglass.champions.abstracts;
 
+import me.limeglass.champions.Champions;
+import me.limeglass.champions.ChampionsAddon;
+import me.limeglass.champions.objects.ChampionsPlayer;
+import me.limeglass.champions.utils.Utils;
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-
-import me.limeglass.champions.Champions;
-import me.limeglass.champions.ChampionsAddon;
-import me.limeglass.champions.objects.ChampionsPlayer;
-import me.limeglass.champions.utils.Utils;
-
 public abstract class Ability {
 
 	protected final FileConfiguration messages = Champions.getConfiguration("messages");
 	protected final FileConfiguration menu = Champions.getConfiguration("abilities");
-	protected Map<ChampionsPlayer, Integer> cooldowns = new HashMap<>();
+	protected final Map<ChampionsPlayer, Integer> cooldowns = new HashMap<>();
 	private final Class<? extends Ability> ability;
 	private static ChampionsAddon addon;
 	private final String name, node;
@@ -29,8 +28,7 @@ public abstract class Ability {
 	
 	public Ability(String name, int cooldown) {
 		Optional<ChampionsAddon> registrar = Champions.getCurrentRegistrar();
-		if (registrar.isPresent())
-			addon = registrar.get();
+		registrar.ifPresent(championsAddon -> addon = championsAddon);
 		this.node = "Abilities." + name;
 		this.ability = getClass();
 		this.cooldown = cooldown;
@@ -46,20 +44,17 @@ public abstract class Ability {
 	public void startCooldown(ChampionsPlayer player) {
 		if (!cooldowns.containsKey(player)) {
 			cooldowns.put(player, cooldown);
-			Bukkit.getScheduler().runTaskAsynchronously(Champions.getInstance(), new Runnable() {
-				@Override
-				public void run() {
-					try {
-						for (int i = cooldown; i > 0; i--) {
-							Thread.sleep(1000);
-							cooldowns.replace(player, i);
-						}
+			Bukkit.getScheduler().runTaskAsynchronously(Champions.getInstance(), () -> {
+				try {
+					for (int i = cooldown; i > 0; i--) {
 						Thread.sleep(1000);
-					} catch (InterruptedException e) {}
-					cooldowns.remove(player);
-					onCooldownEnd(player);
-					sendPlaceholderMessage(player, "abilityCooldownFinish");
-				}
+						cooldowns.replace(player, i);
+					}
+					Thread.sleep(1000);
+				} catch (InterruptedException ignored) {}
+				cooldowns.remove(player);
+				onCooldownEnd(player);
+				sendPlaceholderMessage(player, "abilityCooldownFinish");
 			});
 		}
 	}

@@ -1,28 +1,27 @@
 package me.limeglass.champions.objects;
 
+import me.limeglass.champions.Champions;
+import me.limeglass.champions.managers.GameManager;
+import me.limeglass.champions.managers.PlayerManager;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.configuration.file.FileConfiguration;
+
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.configuration.file.FileConfiguration;
-
-import me.limeglass.champions.Champions;
-import me.limeglass.champions.managers.GameManager;
-import me.limeglass.champions.managers.PlayerManager;
-
 public class ChampionsGame {
 	
-	private FileConfiguration data = Champions.getConfiguration("data");
-	private Map<Integer, Set<Location>> KIT_SPAWNS = new HashMap<>();
-	private Set<Location> SPECTATOR_SPAWNS = new LinkedHashSet<>();
+	private final FileConfiguration data = Champions.getConfiguration("data");
+	private final Map<Integer, Set<Location>> KIT_SPAWNS = new HashMap<>();
+	private final Set<Location> SPECTATOR_SPAWNS = new LinkedHashSet<>();
 	private Set<Location> TEAM1_SPAWNS = new LinkedHashSet<>();
 	private Set<Location> TEAM2_SPAWNS = new LinkedHashSet<>();
-	private Map<String, Location> CAPTURES = new HashMap<>();
+	private final Map<String, Location> CAPTURES = new HashMap<>();
 	private final ChampionsMode mode;
 	private ChampionsState state;
 	private boolean captures;
@@ -33,11 +32,11 @@ public class ChampionsGame {
 		INGAME,
 		STARTING,
 		RESTARTING,
-		DISABLED;
+		DISABLED
 	}
 	
 	public enum ChampionsMode {
-		TEAMDEATHMATCH;
+		TEAMDEATHMATCH
 	}
 	
 	public ChampionsGame(Boolean temp, String name, ChampionsMode mode) {
@@ -99,7 +98,7 @@ public class ChampionsGame {
 	
 	//This isn't working
 	public Boolean kitSpawnsAreSetup() {
-		if (KIT_SPAWNS == null || KIT_SPAWNS.isEmpty()) return false;
+		if ( KIT_SPAWNS.isEmpty()) return false;
 		int length = Champions.getConfiguration("kits").getConfigurationSection("Kits").getKeys(false).size();
 		return KIT_SPAWNS.keySet().size() >= length * 2;
 	}
@@ -172,7 +171,7 @@ public class ChampionsGame {
 	}
 	
 	private Set<Location> getLocations(String node) {
-		Set<Location> LOCATIONS = new LinkedHashSet<Location>();
+		Set<Location> LOCATIONS = new LinkedHashSet<>();
 		if (data.isConfigurationSection(node)) {
 			for (String index : data.getConfigurationSection(node).getKeys(false)) {
 				int x = data.getInt(node + "." + index + ".x", 0);

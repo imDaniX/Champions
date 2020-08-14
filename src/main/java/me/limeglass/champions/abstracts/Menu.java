@@ -1,18 +1,18 @@
 package me.limeglass.champions.abstracts;
 
-import java.util.Map;
-import java.util.Optional;
+import me.limeglass.champions.Champions;
+import me.limeglass.champions.ChampionsAddon;
+import me.limeglass.champions.managers.InventoryManager;
+import me.limeglass.champions.utils.ItemBuilder;
+import me.limeglass.champions.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import me.limeglass.champions.Champions;
-import me.limeglass.champions.ChampionsAddon;
-import me.limeglass.champions.managers.InventoryManager;
-import me.limeglass.champions.utils.ItemBuilder;
-import me.limeglass.champions.utils.Utils;
+import java.util.Map;
+import java.util.Optional;
 
 public abstract class Menu {
 
@@ -26,8 +26,7 @@ public abstract class Menu {
 	
 	public Menu(String name, int size, String header) {
 		Optional<ChampionsAddon> registrar = Champions.getCurrentRegistrar();
-		if (registrar.isPresent())
-			addon = registrar.get();
+		registrar.ifPresent(championsAddon -> addon = championsAddon);
 		this.menuClass = getClass();
 		this.size = 9 * size;
 		this.header = header;
@@ -40,7 +39,7 @@ public abstract class Menu {
 		if (background)
 			for (int i = 0; i < inventory.getSize(); i++) 
 				inventory.setItem(i, getBackgroundItem());
-		getItems().entrySet().forEach(entry -> inventory.setItem(entry.getKey(), entry.getValue()));
+		getItems().forEach(inventory::setItem);
 		return inventory;
 	}
 	

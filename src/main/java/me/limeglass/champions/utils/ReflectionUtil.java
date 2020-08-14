@@ -1,12 +1,12 @@
 package me.limeglass.champions.utils;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 public class ReflectionUtil {
 	
@@ -16,8 +16,7 @@ public class ReflectionUtil {
 	
 	public static Class<?> getNMSClass(String classString) throws ClassNotFoundException {
 		String name = "net.minecraft.server." + getVersion() + classString;
-		Class<?> nmsClass = Class.forName(name);
-		return nmsClass;
+        return Class.forName(name);
 	}
 	
 	public static Class<?> getOBCClass(String classString) {
@@ -34,7 +33,7 @@ public class ReflectionUtil {
 		return obcClass;
 	}
 	
-	public static Object getConnection(Player player) throws SecurityException, NoSuchMethodException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+	public static Object getConnection(Player player) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
 		Object nmsPlayer = getHandle(player);
 		Field connectionField = nmsPlayer.getClass().getField("playerConnection");
 		return connectionField.get(nmsPlayer);
@@ -46,7 +45,7 @@ public class ReflectionUtil {
 			f.setAccessible(true);
 			f.set(obj, newValue);
 			return true;
-		} catch (Exception e){}
+		} catch (Exception ignored){}
 		return false;
 	}
 
@@ -56,7 +55,7 @@ public class ReflectionUtil {
 			Field f = from.getDeclaredField(field);
 			f.setAccessible(true);
 			return (T) f.get(obj);
-		} catch (Exception e){}
+		} catch (Exception ignored){}
 		return null;	
 	}
 	

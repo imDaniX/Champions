@@ -1,5 +1,7 @@
 package me.limeglass.champions.abilities;
 
+import me.limeglass.champions.abstracts.Ability;
+import me.limeglass.champions.objects.ChampionsPlayer;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.FireworkEffect.Type;
@@ -9,9 +11,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.meta.FireworkMeta;
-
-import me.limeglass.champions.abstracts.Ability;
-import me.limeglass.champions.objects.ChampionsPlayer;
 
 public class TestAbility extends Ability {
 
@@ -52,7 +51,7 @@ public class TestAbility extends Ability {
 			.with(Type.BALL_LARGE)
 			.trail(true)
 			.flicker(false)
-			.withFade(new Color[]{Color.WHITE, Color.ORANGE})
+			.withFade(Color.WHITE, Color.ORANGE)
 			.withColor(Color.LIME)
 			.build()
 		);

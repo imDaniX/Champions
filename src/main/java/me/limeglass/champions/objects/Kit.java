@@ -1,5 +1,16 @@
 package me.limeglass.champions.objects;
 
+import me.limeglass.champions.Champions;
+import me.limeglass.champions.abstracts.Ability;
+import me.limeglass.champions.listeners.EventHandler;
+import me.limeglass.champions.managers.AbilityManager;
+import me.limeglass.champions.managers.KitManager;
+import me.limeglass.champions.utils.Utils;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -8,24 +19,12 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 
-import org.bukkit.attribute.Attribute;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
-import me.limeglass.champions.Champions;
-import me.limeglass.champions.abstracts.Ability;
-import me.limeglass.champions.listeners.EventHandler;
-import me.limeglass.champions.managers.AbilityManager;
-import me.limeglass.champions.managers.KitManager;
-import me.limeglass.champions.utils.Utils;
-
 public class Kit {
 
 	private final FileConfiguration kits = Champions.getConfiguration("kits");
 	private final Boolean hasAbilities, hasItems, hasHelmet, hasChestplate, hasLeggings, hasBoots;
 	private final String name;
-	private String node;
+	private final String node;
 	private double health;
 	
 	public Kit(String name) {
@@ -58,7 +57,7 @@ public class Kit {
 	}
 
 	public Map<Integer, ItemStack> getItems() {
-		Map<Integer, ItemStack> items = new HashMap<Integer, ItemStack>();
+		Map<Integer, ItemStack> items = new HashMap<>();
 		for (String slot : kits.getConfigurationSection(node + ".items").getKeys(false)) {
 			if (Integer.parseInt(slot) != -1) items.put(Integer.parseInt(slot), Utils.getItem(kits, node + ".items." + slot));
 		}
@@ -77,15 +76,14 @@ public class Kit {
 		if (hasAbilities && getAbilities() != null) {
 			for (String ability : abilities) {
 				Optional<Ability> optional = AbilityManager.getAbility(ability);
-				if (optional.isPresent())
-					optional.get().onAbilityExecute(player);
+				optional.ifPresent(value -> value.onAbilityExecute(player));
 			}
 		}
 	}
 	
 	public Set<Ability> getAbilities() {
 		if (getConfigurationAbilities() == null) return null;
-		Set<Ability> abilities = new HashSet<Ability>();
+		Set<Ability> abilities = new HashSet<>();
 		for (Ability ability : EventHandler.getEventAbilities().keySet()) {
 			if (getConfigurationAbilities().contains(ability.getName())) {
 				abilities.add(ability);

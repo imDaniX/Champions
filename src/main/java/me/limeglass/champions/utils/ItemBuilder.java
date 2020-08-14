@@ -11,11 +11,13 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.material.MaterialData;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * ItemBuilder - API Class to create a {@link org.bukkit.inventory.ItemStack} with just one line of Code
@@ -23,14 +25,12 @@ import java.util.*;
  * @author Acquized
  * @contributor Kev575
  */
-@SuppressWarnings("deprecation")
 public class ItemBuilder {
 
 	private ItemStack item;
 	private ItemMeta meta;
-	private Material material = Material.STONE;
+	private Material material;
 	private int amount = 1;
-	private MaterialData data;
 	private short damage = 0;
 	private Map<Enchantment, Integer> enchantments = new HashMap<>();
 	private String displayname;
@@ -49,24 +49,22 @@ public class ItemBuilder {
 	
 	/** Initalizes the ItemBuilder with String */
 	public ItemBuilder(String value) {
-		Material materialValue = (Material) Utils.getEnum(Material.class, value);
-		this.item = new ItemStack(materialValue);
-		this.material = materialValue;
+		this(Material.getMaterial(value));
 	}
 	
 	/** Initalizes the ItemBuilder with String and amount */
 	public ItemBuilder(String value, int amount) {
-		Material materialValue = (Material) Utils.getEnum(Material.class, value);
+		Material materialValue = Utils.getEnum(Material.class, value);
 		this.item = new ItemStack(materialValue);
 		this.material = materialValue;
-		if (((amount > material.getMaxStackSize()) || (amount <= 0)) && (!unsafeStackSize)) amount = 1;
+		if ((amount > material.getMaxStackSize()) || (amount <= 0)) amount = 1;
 		this.amount = amount;
 	}
 
 	/** Initalizes the ItemBuilder with {@link org.bukkit.Material} and Amount */
 	public ItemBuilder(Material material, int amount) {
 		if (material == null) material = Material.AIR;
-		if (((amount > material.getMaxStackSize()) || (amount <= 0)) && (!unsafeStackSize)) amount = 1;
+		if ((amount > material.getMaxStackSize()) || (amount <= 0)) amount = 1;
 		this.amount = amount;
 		this.item = new ItemStack(material, amount);
 		this.material = material;
@@ -78,7 +76,7 @@ public class ItemBuilder {
 		Validate.notNull(displayname, "The Displayname is null.");
 		this.item = new ItemStack(material, amount);
 		this.material = material;
-		if (((amount > material.getMaxStackSize()) || (amount <= 0)) && (!unsafeStackSize)) amount = 1;
+		if ((amount > material.getMaxStackSize()) || (amount <= 0)) amount = 1;
 		this.amount = amount;
 		this.displayname = displayname;
 	}
@@ -100,7 +98,6 @@ public class ItemBuilder {
 			this.meta = item.getItemMeta();
 		this.material = item.getType();
 		this.amount = item.getAmount();
-		this.data = item.getData();
 		this.damage = item.getDurability();
 		this.enchantments = item.getEnchantments();
 		if (item.hasItemMeta())
@@ -108,9 +105,7 @@ public class ItemBuilder {
 		if (item.hasItemMeta())
 			this.lore = item.getItemMeta().getLore();
 		if (item.hasItemMeta())
-			for (ItemFlag f : item.getItemMeta().getItemFlags()) {
-				flags.add(f);
-			}
+			flags.addAll(item.getItemMeta().getItemFlags());
 	}
 
 	/** Initalizes the ItemBuilder with a {@link org.bukkit.configuration.file.FileConfiguration} ItemStack in Path */
@@ -125,16 +120,6 @@ public class ItemBuilder {
 	public ItemBuilder amount(int amount) {
 		if (((amount > material.getMaxStackSize()) || (amount <= 0)) && (!unsafeStackSize)) amount = 1;
 		this.amount = amount;
-		return this;
-	}
-
-	/**
-	 * Sets the {@link org.bukkit.material.MaterialData} of the ItemStack
-	 * @param data MaterialData for the ItemStack
-	 */
-	public ItemBuilder data(MaterialData data) {
-		Validate.notNull(data, "The Data is null.");
-		this.data = data;
 		return this;
 	}
 
@@ -387,11 +372,6 @@ public class ItemBuilder {
 		return meta;
 	}
 
-	/** Returns the MaterialData */
-	public MaterialData getData() {
-		return data;
-	}
-
 	/**
 	 * Returns all Lores
 	 * @deprecated Use {@code ItemBuilder#getLores}
@@ -466,8 +446,6 @@ public class ItemBuilder {
 			return b;
 		if (b.displayname != null)
 			displayname = b.displayname;
-		if (b.data != null)
-			data = b.data;
 		if (b.material != null)
 			material = b.material;
 		if (b.lore != null)
@@ -489,9 +467,6 @@ public class ItemBuilder {
 		item.setAmount(amount);
 		item.setDurability(damage);
 		meta = item.getItemMeta();
-		if (data != null) {
-			item.setData(data);
-		}
 		if (enchantments.size() > 0) {
 			item.addUnsafeEnchantments(enchantments);
 		}

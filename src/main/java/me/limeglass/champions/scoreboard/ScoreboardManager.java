@@ -1,14 +1,15 @@
 package me.limeglass.champions.scoreboard;
-import java.util.HashMap;
-import java.util.Map;
-import org.bukkit.Bukkit;
 
 import me.limeglass.champions.Champions;
 import me.limeglass.champions.objects.ChampionsPlayer;
+import org.bukkit.Bukkit;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ScoreboardManager {
 	
-	private static Map<ChampionsPlayer, ChampionsScoreboard> scoreboards = new HashMap<ChampionsPlayer, ChampionsScoreboard>();
+	private static final Map<ChampionsPlayer, ChampionsScoreboard> scoreboards = new HashMap<>();
 	
 	public static void addScoreboard(ChampionsPlayer player, ChampionsScoreboard scoreboard) {
 		scoreboards.put(player, scoreboard);
@@ -29,13 +30,10 @@ public class ScoreboardManager {
 	}
 	
 	public static void start() {
-		Bukkit.getScheduler().scheduleSyncRepeatingTask(Champions.getInstance(), new Runnable() {
-			@Override
-			public void run() {
-				if (scoreboards != null && !scoreboards.isEmpty()) {
-					for (ChampionsScoreboard scoreboard : scoreboards.values()) {
-						scoreboardUpdate(scoreboard);
-					}
+		Bukkit.getScheduler().scheduleSyncRepeatingTask(Champions.getInstance(), () -> {
+			if (scoreboards != null && !scoreboards.isEmpty()) {
+				for (ChampionsScoreboard scoreboard : scoreboards.values()) {
+					scoreboardUpdate(scoreboard);
 				}
 			}
 		}, 1, 20 * 2); //2 seconds

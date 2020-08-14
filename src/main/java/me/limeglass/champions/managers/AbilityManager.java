@@ -1,24 +1,22 @@
 package me.limeglass.champions.managers;
 
+import me.limeglass.champions.abstracts.Ability;
+
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import me.limeglass.champions.abstracts.Ability;
-
 
 public class AbilityManager {
 
-	private static Set<Ability> abilities = new HashSet<>();
+	private static final Set<Ability> abilities = new HashSet<>();
 	
 	public static void addAbility(Ability ability) {
-		if (!abilities.contains(ability))
-			abilities.add(ability);
+		abilities.add(ability);
 	}
 	
 	public static void removeAbility(Ability ability) {
-		if (abilities.contains(ability))
-			abilities.remove(ability);
+		abilities.remove(ability);
 	}
 	
 	public static Set<Ability> getRegisteredAbilities() {

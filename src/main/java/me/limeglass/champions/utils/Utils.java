@@ -1,5 +1,18 @@
 package me.limeglass.champions.utils;
 
+import me.limeglass.champions.Champions;
+import me.limeglass.champions.managers.GameManager;
+import me.limeglass.champions.objects.ChampionsGame;
+import me.limeglass.champions.objects.ChampionsGame.ChampionsMode;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
+
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -11,19 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-
-import me.limeglass.champions.Champions;
-import me.limeglass.champions.managers.GameManager;
-import me.limeglass.champions.objects.ChampionsGame;
-import me.limeglass.champions.objects.ChampionsGame.ChampionsMode;
 
 public class Utils {
 	
@@ -70,7 +70,7 @@ public class Utils {
 		try {
 			final Method method = clazz.getMethod("values");
 			method.setAccessible(true);
-			Set<String> enums = new HashSet<String>();
+			Set<String> enums = new HashSet<>();
 			for (Object object : (Object[]) method.invoke(clazz)) {
 				enums.add(object.toString());
 			}
@@ -88,17 +88,17 @@ public class Utils {
 	public static ItemStack getItem(FileConfiguration configuration, String node) {
 		String name = configuration.getString(node + ".name");
 		String[] lores = null;
-		if (configuration.isSet(node + ".lores")) lores = configuration.getStringList(node + ".lores").toArray(new String[configuration.getStringList(node + ".lores").size()]);
+		if (configuration.isSet(node + ".lores")) lores = configuration.getStringList(node + ".lores").toArray(new String[0]);
 		String material = configuration.getString(node + ".material", "AIR");
 		List<ItemFlag> flags = null;
 		if (configuration.isSet(node + ".itemflags")) {
 			for (String flag : configuration.getStringList(node + ".itemflags")) {
 				try {
 					flags.add(Utils.getEnum(ItemFlag.class, flag));
-				} catch (NullPointerException e) {}
+				} catch (NullPointerException ignored) {}
 			}
 		}
-		Map<Enchantment, Integer> enchantments = new HashMap<Enchantment, Integer>();
+		Map<Enchantment, Integer> enchantments = new HashMap<>();
 		if (configuration.isSet(node + ".enchantments")) {
 			for (String enchantment : configuration.getStringList(node + ".enchantments")) {
 				try {
@@ -110,7 +110,7 @@ public class Utils {
 						if (slot != -1) enchantments.put(Enchantment.getByName(handle[0]), slot);
 						else enchantments.put(Enchantment.getByName(handle[0]), 1);
 					}
-				} catch (NullPointerException e) {}
+				} catch (NullPointerException ignored) {}
 			}
 		}
 		short colour = (short) configuration.getInt(node + ".colour", -1);
@@ -137,7 +137,7 @@ public class Utils {
 	}
 	
 	public static String[] getMessage(Boolean prefix, String node, Player player) {
-		List<String> values = new ArrayList<String>();
+		List<String> values = new ArrayList<>();
 		FileConfiguration configuration = Champions.getConfiguration("messages");
 		if (configuration.isList(node)) values = configuration.getStringList(node);
 		else values.add(configuration.getString(node));
@@ -146,7 +146,7 @@ public class Utils {
 			values.remove(1);
 		}
 		if (values == null) return null;
-		List<String> toReturn = new ArrayList<String>();
+		List<String> toReturn = new ArrayList<>();
 		for (String value : values) {
 			value = value.replaceAll(Pattern.quote("{TEAM1}"), Champions.getConfiguration("config").getString("Teams.colour1"));
 			value = value.replaceAll(Pattern.quote("{TEAM2}"), Champions.getConfiguration("config").getString("Teams.colour2"));
@@ -162,6 +162,6 @@ public class Utils {
 			value = value.replaceAll(Pattern.quote("{KITS}"), Champions.getConfiguration("kits").getConfigurationSection("Kits").getKeys(false).toString());
 			toReturn.add(cc(colour(value)[0]));
 		}
-		return toReturn.toArray(new String[toReturn.size()]);
+		return toReturn.toArray(new String[0]);
 	}
 }

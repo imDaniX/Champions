@@ -1,16 +1,15 @@
 package me.limeglass.champions.menus;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
-
 import me.limeglass.champions.Champions;
 import me.limeglass.champions.abstracts.Menu;
 import me.limeglass.champions.managers.InventoryManager;
 import me.limeglass.champions.utils.Utils;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class YamlMenu extends Menu {
 
@@ -31,7 +30,7 @@ public class YamlMenu extends Menu {
 
 	@Override
 	protected Map<Integer, ItemStack> getItems() {
-		Map<Integer, ItemStack> items = new HashMap<Integer, ItemStack>();
+		Map<Integer, ItemStack> items = new HashMap<>();
 		for (String slot : menu.getConfigurationSection(node + ".items").getKeys(false)) {
 			items.put(Integer.parseInt(slot), Utils.getItem(menu, node + ".items." + slot));
 		}
