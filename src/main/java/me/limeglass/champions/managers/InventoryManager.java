@@ -8,6 +8,7 @@ import org.bukkit.inventory.Inventory;
 
 import me.limeglass.champions.abstracts.Menu;
 import me.limeglass.champions.utils.Utils;
+import org.bukkit.inventory.InventoryView;
 
 public class InventoryManager {
 
@@ -27,27 +28,27 @@ public class InventoryManager {
 		return menus;
 	}
 	
-	public static Boolean isMenu(Inventory inventory) {
+	public static boolean isMenu(InventoryView inventory) {
 		for (Menu menu : menus.values()) {
-			if (inventory.getName().equals(Utils.cc(menu.getHeader())) && InventoryType.CHEST == inventory.getType())
+			if (inventory.getTitle().equals(Utils.cc(menu.getHeader())) && InventoryType.CHEST == inventory.getType())
 				return true;
 		}
 		return false;
 	}
 	
-	public static Boolean isMenu(Inventory inventory, String name) {
+	public static boolean isMenu(InventoryView inventory, String name) {
 		for (Menu menu : menus.values()) {
-			if (inventory.getName().equals(Utils.cc(menu.getHeader())) && InventoryType.CHEST == inventory.getType() && menu.getName().equals(name)) {
+			if (inventory.getTitle().equals(Utils.cc(menu.getHeader())) && InventoryType.CHEST == inventory.getType() && menu.getName().equals(name)) {
 				return true;
 			}
 		}
 		return false;
 	}
 	
-	public static Menu getMenu(Inventory inventory) {
+	public static Menu getMenu(InventoryView inventory) {
 		if (isMenu(inventory)) {
 			for (Menu menu : menus.values()) {
-				if (inventory.getName().equals(Utils.cc(menu.getHeader())) && InventoryType.CHEST == inventory.getType())
+				if (inventory.getTitle().equals(Utils.cc(menu.getHeader())) && InventoryType.CHEST == inventory.getType())
 					return menu;
 			}
 		}

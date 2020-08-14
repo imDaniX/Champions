@@ -16,6 +16,7 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
 import me.limeglass.champions.Champions;
@@ -31,14 +32,15 @@ public class EventListener implements Listener {
     public void onInventoryClick(InventoryClickEvent event) {
 		FileConfiguration items = Champions.getConfiguration("joinItems");
 		Inventory inventory = event.getClickedInventory();
+		InventoryView view = event.getView();
 		Player player = (Player) event.getWhoClicked();
 		Optional<ChampionsPlayer> optional = PlayerManager.getChampionsPlayer(player);
 		if (!optional.isPresent())
 			return;
 		ChampionsPlayer championsPlayer = optional.get();
-		if (InventoryManager.isMenu(inventory)) {
+		if (InventoryManager.isMenu(view)) {
 			event.setCancelled(true);
-			InventoryManager.getMenu(inventory).onInventoryClick(event);
+			InventoryManager.getMenu(view).onInventoryClick(event);
 		} else if (inventory.getType() == InventoryType.PLAYER && championsPlayer.isIngame()) {
 			if (!player.hasPermission("champions.ingame.moveinventory"))
 				event.setCancelled(true);
